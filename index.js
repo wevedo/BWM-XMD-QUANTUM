@@ -34,7 +34,6 @@ const evt = require("./Ibrahim/adams");
 const rateLimit = new Map();
 const MAX_RATE_LIMIT_ENTRIES = 100000;
 const RATE_LIMIT_WINDOW = 3000; // 3 seconds
-const chalk = require("chalk");
 const express = require("express");
 const { exec } = require("child_process");
 const http = require("http");
