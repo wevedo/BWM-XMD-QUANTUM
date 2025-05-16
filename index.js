@@ -73,50 +73,32 @@ function atbverifierEtatJid(jid) {
 
 async function authentification() {
     try {
-        if (!fs.existsSync(__dirname + "/bwmxmd/creds.json")) {
+        if (!fs.existsSync(__dirname + "/Bwmxmd/creds.json")) {
             console.log("Bwm xmd session connected ✅");
+            // Split the session string to get Pastebin ID
+            const sessdata = conf.session.split("Bmwmd$")[1];
             
-            // Check if session is from Pastebin
-            if (conf.session.includes("Bmw-xmdπ")) {
-                const sessdata = conf.session.split("Bmw-xmdπ")[1];
-                const url = `https://pastebin.com/raw/${sessdata}`;
-                const response = await axios.get(url);
-                const data = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-                fs.writeFileSync(__dirname + "/bwmxmd/creds.json", data, "utf8");
-            } 
-            // Original session handling
-            else {
-                const [header, b64data] = conf.session.split(';;;'); 
-                if (header === "Bmw-xmdπ" && b64data) {
-                    let compressedData = Buffer.from(b64data.replace('...', ''), 'base64');
-                    let decompressedData = zlib.gunzipSync(compressedData);
-                    fs.writeFileSync(__dirname + "/Bwmxmd/creds.json", decompressedData, "utf8");
-                } else {
-                    throw new Error("Invalid session format");
-                }
+            if (!sessdata) {
+                throw new Error("Invalid session format");
             }
+
+            const url = `https://pastebin.com/raw/${sessdata}`;
+            const response = await axios.get(url);
+            const data = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+            fs.writeFileSync(__dirname + "/Bwmxmd/creds.json", data, "utf8");
+            
         } else if (fs.existsSync(__dirname + "/Bwmxmd/creds.json") && conf.session !== "zokk") {
             console.log("Updating existing session...");
+            const sessdata = conf.session.split("Bmwmd$")[1];
             
-            // Check if session is from Pastebin
-            if (conf.session.includes("Bmw-xmdπ")) {
-                const sessdata = conf.session.split("Bmw-xmdπ")[1];
-                const url = `https://pastebin.com/raw/${sessdata}`;
-                const response = await axios.get(url);
-                const data = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-                fs.writeFileSync(__dirname + "/Bwmxmd/creds.json", data, "utf8");
-            } 
-            // Original session handling
-            else {
-                const [header, b64data] = conf.session.split(';;;'); 
-                if (header === "Bmw-xmdπ" && b64data) {
-                    let compressedData = Buffer.from(b64data.replace('...', ''), 'base64');
-                    let decompressedData = zlib.gunzipSync(compressedData);
-                    fs.writeFileSync(__dirname + "/Bwmxmd/creds.json", decompressedData, "utf8");
-                } else {
-                    throw new Error("Invalid session format");
-                }
+            if (!sessdata) {
+                throw new Error("Invalid session format");
             }
+
+            const url = `https://pastebin.com/raw/${sessdata}`;
+            const response = await axios.get(url);
+            const data = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+            fs.writeFileSync(__dirname + "/Bwmxmd/creds.json", data, "utf8");
         }
     } catch (e) {
         console.log("Session Invalid: " + e.message);
