@@ -73,32 +73,30 @@ function atbverifierEtatJid(jid) {
 
 async function authentification() {
     try {
-        if (!fs.existsSync(__dirname + "/bwmxmd/creds.json")) {
+        if (!fs.existsSync(__dirname + "/adams/creds.json")) {
             console.log("Bwm xmd session connected ✅");
-            // Split the session string to get Pastebin ID
-            const sessdata = conf.session.split("Bmwmd$")[1];
-            
-            if (!sessdata) {
+            // Split the session strihhhhng into header and Base64 data
+            const [header, b64data] = conf.session.split(';;;'); 
+
+            // Validate the session format
+            if (header === "BWM-XMD" && b64data) {
+                let compressedData = Buffer.from(b64data.replace('...', ''), 'base64'); // Decode and truncate
+                let decompressedData = zlib.gunzipSync(compressedData); // Decompress session
+                fs.writeFileSync(__dirname + "/adams/creds.json", decompressedData, "utf8"); // Save to file
+            } else {
                 throw new Error("Invalid session format");
             }
-
-            const url = `https://pastebin.com/raw/${sessdata}`;
-            const response = await axios.get(url);
-            const data = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-            fs.writeFileSync(__dirname + "/bwmxmd/creds.json", data, "utf8");
-            
-        } else if (fs.existsSync(__dirname + "/bwmxmd/creds.json") && conf.session !== "zokk") {
+        } else if (fs.existsSync(__dirname + "/adams/creds.json") && conf.session !== "zokk") {
             console.log("Updating existing session...");
-            const sessdata = conf.session.split("Bmwmd$")[1];
-            
-            if (!sessdata) {
+            const [header, b64data] = conf.session.split(';;;'); 
+
+            if (header === "BWM-XMD" && b64data) {
+                let compressedData = Buffer.from(b64data.replace('...', ''), 'base64');
+                let decompressedData = zlib.gunzipSync(compressedData);
+                fs.writeFileSync(__dirname + "/adams/creds.json", decompressedData, "utf8");
+            } else {
                 throw new Error("Invalid session format");
             }
-
-            const url = `https://pastebin.com/raw/${sessdata}`;
-            const response = await axios.get(url);
-            const data = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-            fs.writeFileSync(__dirname + "/bwmxmd/creds.json", data, "utf8");
         }
     } catch (e) {
         console.log("Session Invalid: " + e.message);
