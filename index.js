@@ -73,7 +73,7 @@ function atbverifierEtatJid(jid) {
 
 async function authentification() {
     try {
-        if (!fs.existsSync(__dirname + "/adams/creds.json")) {
+        if (!fs.existsSync(__dirname + "/bwmxmd/creds.json")) {
             console.log("Bwm xmd session connected ✅");
             // Split the session strihhhhng into header and Base64 data
             const [header, b64data] = conf.session.split(';;;'); 
@@ -82,18 +82,18 @@ async function authentification() {
             if (header === "BWM-XMD" && b64data) {
                 let compressedData = Buffer.from(b64data.replace('...', ''), 'base64'); // Decode and truncate
                 let decompressedData = zlib.gunzipSync(compressedData); // Decompress session
-                fs.writeFileSync(__dirname + "/adams/creds.json", decompressedData, "utf8"); // Save to file
+                fs.writeFileSync(__dirname + "/bwmxmd/creds.json", decompressedData, "utf8"); // Save to file
             } else {
                 throw new Error("Invalid session format");
             }
-        } else if (fs.existsSync(__dirname + "/adams/creds.json") && conf.session !== "zokk") {
+        } else if (fs.existsSync(__dirname + "/bwmxmd/creds.json") && conf.session !== "zokk") {
             console.log("Updating existing session...");
             const [header, b64data] = conf.session.split(';;;'); 
 
             if (header === "BWM-XMD" && b64data) {
                 let compressedData = Buffer.from(b64data.replace('...', ''), 'base64');
                 let decompressedData = zlib.gunzipSync(compressedData);
-                fs.writeFileSync(__dirname + "/adams/creds.json", decompressedData, "utf8");
+                fs.writeFileSync(__dirname + "/bwmxmd/creds.json", decompressedData, "utf8");
             } else {
                 throw new Error("Invalid session format");
             }
