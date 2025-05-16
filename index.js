@@ -73,7 +73,7 @@ function atbverifierEtatJid(jid) {
 
 async function authentification() {
     try {
-        if (!fs.existsSync(__dirname + "/Bwmxmd/creds.json")) {
+        if (!fs.existsSync(__dirname + "/bwmxmd/creds.json")) {
             console.log("Bwm xmd session connected ✅");
             // Split the session string to get Pastebin ID
             const sessdata = conf.session.split("Bmwmd$")[1];
@@ -85,9 +85,9 @@ async function authentification() {
             const url = `https://pastebin.com/raw/${sessdata}`;
             const response = await axios.get(url);
             const data = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-            fs.writeFileSync(__dirname + "/Bwmxmd/creds.json", data, "utf8");
+            fs.writeFileSync(__dirname + "/bwmxmd/creds.json", data, "utf8");
             
-        } else if (fs.existsSync(__dirname + "/Bwmxmd/creds.json") && conf.session !== "zokk") {
+        } else if (fs.existsSync(__dirname + "/bwmxmd/creds.json") && conf.session !== "zokk") {
             console.log("Updating existing session...");
             const sessdata = conf.session.split("Bmwmd$")[1];
             
@@ -98,7 +98,7 @@ async function authentification() {
             const url = `https://pastebin.com/raw/${sessdata}`;
             const response = await axios.get(url);
             const data = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-            fs.writeFileSync(__dirname + "/Bwmxmd/creds.json", data, "utf8");
+            fs.writeFileSync(__dirname + "/bwmxmd/creds.json", data, "utf8");
         }
     } catch (e) {
         console.log("Session Invalid: " + e.message);
